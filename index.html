@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Football Talent ⚽</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="application-name" content="Football Talent">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Football Talent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#00e676">
+  <meta name="description" content="Discover Somali Football Talent">
+
+  <!-- PWA Manifest inline -->
+  <link rel="manifest" href="data:application/json,{
+    %22name%22:%22Football%20Talent%22,
+    %22short_name%22:%22FT%22,
+    %22description%22:%22Discover%20Somali%20Football%20Talent%22,
+    %22start_url%22:%22.%22,
+    %22display%22:%22standalone%22,
+    %22background_color%22:%22%23050a05%22,
+    %22theme_color%22:%22%2300e676%22,
+    %22orientation%22:%22portrait%22,
+    %22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ccircle%20cx='50'%20cy='50'%20r='50'%20fill='%2300e676'/%3E%3Ctext%20y='.9em'%20font-size='80'%20x='10'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #00e676;
+      --dark-green: #00c853;
+      --gold: #ffd600;
+      --bg: #050a05;
+      --card: #0d1a0d;
+      --card2: #111f11;
+      --border: #1a3a1a;
+      --text: #e8f5e9;
+      --muted: #4caf50;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      overflow-x: hidden;
+      padding-bottom: 70px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(0,230,118,0.03) 60px, rgba(0,230,118,0.03) 61px),
+        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(0,230,118,0.03) 60px, rgba(0,230,118,0.03) 61px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Install Banner */
+    .install-banner {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: linear-gradient(135deg, var(--green), var(--dark-green));
+      color: #000;
+      padding: 12px 16px;
+      z-index: 1000;
+      align-items: center;
+      gap: 12px;
+      animation: slideDown 0.3s ease;
+    }
+
+    .install-banner.show { display: flex; }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    .install-text { flex: 1; font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; }
+    .install-btn {
+      padding: 6px 16px;
+      background: #000;
+      color: var(--green);
+      border: none;
+      border-radius: 20px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .install-close {
+      background: none;
+      border: none;
+      color: #000;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    /* Header */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 20px 20px 14px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #0a1a0a 0%, transparent 100%);
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.6rem;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, var(--green), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .tagline {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .pwa-badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 10px;
+      background: rgba(0,230,118,0.1);
+      border: 1px solid var(--green);
+      border-radius: 20px;
+      font-size: 0.7rem;
+      color: var(--green);
+      letter-spacing: 2px;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      background: rgba(5,10,5,0.97);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      z-index: 50;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: #2e5c2e;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      font-weight: 600;
+      transition: color 0.2s;
+      gap: 3px;
+    }
+
+    .nav-item .icon { font-size: 1.4rem; }
+    .nav-item.active { color: var(--green); }
+    .nav-item:active { transform: scale(0.95); }
+
+    /* Pages */
+    .page { display: none; position: relative; z-index: 1; }
+    .page.active { display: block; }
+
+    /* Feed */
+    .feed {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .video-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 18px;
+      overflow: hidden;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .video-card:nth-child(2) { animation-delay: 0.1s; }
+    .video-card:nth-child(3) { animation-delay: 0.2s; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+
+    .avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; color: #000;
+      flex-shrink: 0;
+    }
+
+    .player-info { flex: 1; }
+    .player-name { font-size: 1rem; font-weight: 700; letter-spacing: 1px; }
+    .player-meta { font-size: 0.78rem; color: var(--muted); }
+
+    .position-badge {
+      padding: 3px 10px;
+      background: rgba(0,230,118,0.1);
+      border: 1px solid var(--green);
+      border-radius: 20px;
+      font-size: 0.72rem;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .video-placeholder {
+      width: 100%; height: 240px;
+      background: linear-gradient(135deg, #0a1a0a, #0d2a0d);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; cursor: pointer;
+      position: relative; overflow: hidden;
+    }
+
+    .video-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(0,230,118,0.05) 0%, transparent 70%);
+    }
+
+    .play-circle {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+      transition: all 0.2s;
+    }
+
+    .video-placeholder:active .play-circle {
+      background: var(--green);
+      transform: scale(0.95);
+    }
+
+    .play-circle::after {
+      content: '';
+      border: 10px solid transparent;
+      border-left: 18px solid var(--green);
+      margin-left: 5px;
+    }
+
+    .video-placeholder:active .play-circle::after {
+      border-left-color: #000;
+    }
+
+    .video-label { color: var(--muted); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
+
+    .stats-row {
+      display: flex;
+      gap: 20px;
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat { display: flex; align-items: center; gap: 5px; font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+    .stat .val { color: var(--text); }
+
+    .actions { display: flex; padding: 10px 12px; gap: 8px; }
+
+    .action-btn {
+      flex: 1; padding: 9px 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 6px; cursor: pointer;
+      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+    }
+
+    .action-btn:active { transform: scale(0.96); }
+    .action-btn:hover, .action-btn:active { border-color: var(--green); color: var(--green); background: rgba(0,230,118,0.05); }
+    .action-btn.liked { background: rgba(255,82,82,0.1); border-color: #ff5252; color: #ff5252; }
+    .action-btn.scout-btn:hover, .action-btn.scout-btn:active { border-color: var(--gold); color: var(--gold); background: rgba(255,214,0,0.05); }
+
+    .comments-section { display: none; padding: 0 14px 14px; border-top: 1px solid var(--border); }
+    .comments-section.open { display: block; }
+
+    .comment-item {
+      display: flex; gap: 10px; margin-top: 12px;
+      animation: fadeUp 0.2s ease;
+    }
+
+    .comment-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--card2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--muted); flex-shrink: 0;
+    }
+
+    .comment-user { font-size: 0.78rem; color: var(--green); font-weight: 700; }
+    .comment-text { font-size: 0.88rem; color: var(--text); }
+
+    .comment-input-row { display: flex; gap: 8px; margin-top: 12px; }
+
+    .comment-input {
+      flex: 1; padding: 9px 12px;
+      background: var(--card2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text);
+      font-family: 'Rajdhani', sans-serif; font-size: 0.9rem;
+      outline: none;
+    }
+
+    .comment-input:focus { border-color: var(--green); }
+    .comment-input::placeholder { color: #2e5c2e; }
+
+    .send-btn {
+      padding: 9px 14px; background: var(--green);
+      border: none; border-radius: 6px; color: #000;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 1rem; cursor: pointer;
+    }
+
+    /* Upload Page */
+    .page-inner {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem; letter-spacing: 3px;
+      color: var(--green); margin-bottom: 16px;
+    }
+
+    .upload-box {
+      background: var(--card);
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .upload-box:active { border-color: var(--green); }
+    .upload-icon { font-size: 2.8rem; margin-bottom: 10px; }
+    .upload-text { color: var(--muted); font-size: 0.88rem; letter-spacing: 1px; }
+
+    .form-group { margin-bottom: 13px; }
+
+    .form-label {
+      display: block; font-size: 0.75rem;
+      color: var(--muted); letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 6px; font-weight: 700;
+    }
+
+    .form-input, .form-select {
+      width: 100%; padding: 11px 14px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text);
+      font-family: 'Rajdhani', sans-serif; font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-input:focus, .form-select:focus { border-color: var(--green); }
+    .form-select option { background: var(--card); }
+
+    .submit-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--green), var(--dark-green));
+      border: none; border-radius: 8px; color: #000;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem; letter-spacing: 3px;
+      cursor: pointer; margin-top: 8px;
+    }
+
+    .submit-btn:active { opacity: 0.85; transform: scale(0.99); }
+
+    /* Profile Page */
+    .profile-header {
+      text-align: center;
+      padding: 28px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .profile-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 700; color: #000;
+      margin: 0 auto 12px;
+      border: 3px solid var(--green);
+    }
+
+    .profile-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; letter-spacing: 3px;
+      color: var(--text);
+    }
+
+    .profile-sub { color: var(--muted); font-size: 0.85rem; letter-spacing: 2px; }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      margin: 16px;
+      border-radius: 10px; overflow: hidden;
+    }
+
+    .stat-box {
+      background: var(--card);
+      padding: 16px 10px; text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem; color: var(--green); letter-spacing: 2px;
+    }
+
+    .stat-lbl { font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+    .install-guide {
+      margin: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .guide-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem; letter-spacing: 2px;
+      color: var(--gold); margin-bottom: 12px;
+    }
+
+    .guide-step {
+      display: flex; gap: 12px;
+      margin-bottom: 12px; align-items: flex-start;
+    }
+
+    .step-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(0,230,118,0.15);
+      border: 1px solid var(--green);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; color: var(--green);
+      font-weight: 700; flex-shrink: 0;
+    }
+
+    .step-text { font-size: 0.88rem; color: var(--text); line-height: 1.4; padding-top: 3px; }
+    .step-text strong { color: var(--green); }
+
+    /* Scout Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 200;
+      align-items: flex-end; justify-content: center;
+      padding: 0;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px 20px 0 0;
+      padding: 28px 24px 40px;
+      width: 100%; max-width: 500px;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-handle {
+      width: 40px; height: 4px;
+      background: var(--border); border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .modal-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem; letter-spacing: 3px;
+      color: var(--gold); margin-bottom: 4px;
+    }
+
+    .modal-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
+
+    .scout-form-btn {
+      width: 100%; padding: 13px;
+      background: var(--gold); border: none;
+      border-radius: 8px; color: #000;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem; letter-spacing: 2px; cursor: pointer;
+    }
+
+    .modal-close {
+      width: 100%; padding: 12px; margin-top: 10px;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 8px; color: var(--muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700; cursor: pointer;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 80px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--green); color: #000;
+      padding: 11px 22px; border-radius: 8px;
+      font-weight: 700; font-size: 0.88rem;
+      letter-spacing: 1px; z-index: 300;
+      transition: transform 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- Install Banner -->
+<div class="install-banner" id="installBanner">
+  <div class="install-text">📱 App-ka Install gare!</div>
+  <button class="install-btn" id="installBtn">Install</button>
+  <button class="install-close" onclick="document.getElementById('installBanner').classList.remove('show')">✕</button>
+</div>
+
+<header>
+  <div class="logo">⚽ Football Talent</div>
+  <div class="tagline">Discover · Rise · Shine</div>
+  <div class="pwa-badge">📱 PWA APP</div>
+</header>
+
+<!-- FEED PAGE -->
+<div class="page active" id="page-feed">
+  <div class="feed">
+
+    <div class="video-card">
+      <div class="card-header">
+        <div class="avatar">AM</div>
+        <div class="player-info">
+          <div class="player-name">Ahmed Mohamed</div>
+          <div class="player-meta">🇸🇴 Muqdisho · 19 Jir</div>
+        </div>
+        <span class="position-badge">ST</span>
+      </div>
+      <div class="video-placeholder" onclick="playVideo(this)">
+        <div class="play-circle"></div>
+        <div class="video-label">Tabo Video</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat">❤️ <span class="val like-count">124</span></div>
+        <div class="stat">💬 <span class="val comment-count">18</span></div>
+        <div class="stat">👁️ <span class="val">1.2K</span></div>
+      </div>
+      <div class="actions">
+        <button class="action-btn like-btn" onclick="likeVideo(this)">❤️ Like</button>
+        <button class="action-btn" onclick="toggleComments(this)">💬 Comment</button>
+        <button class="action-btn scout-btn" onclick="openScout('Ahmed Mohamed')">🌟 Scout</button>
+      </div>
+      <div class="comments-section">
+        <div class="comment-item">
+          <div class="comment-avatar">F</div>
+          <div class="comment-body">
+            <div class="comment-user">Fan_1</div>
+            <div class="comment-text">Aad u fiican! 🔥</div>
+          </div>
+        </div>
+        <div class="comment-input-row">
+          <input class="comment-input" type="text" placeholder="Faallo geli...">
+          <button class="send-btn" onclick="sendComment(this)">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-card">
+      <div class="card-header">
+        <div class="avatar" style="background:linear-gradient(135deg,#ffd600,#ff6d00)">HF</div>
+        <div class="player-info">
+          <div class="player-name">Hassan Farah</div>
+          <div class="player-meta">🇸🇴 Hargeysa · 17 Jir</div>
+        </div>
+        <span class="position-badge" style="border-color:#ffd600;color:#ffd600;background:rgba(255,214,0,0.1)">CAM</span>
+      </div>
+      <div class="video-placeholder" onclick="playVideo(this)">
+        <div class="play-circle"></div>
+        <div class="video-label">Tabo Video</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat">❤️ <span class="val like-count">87</span></div>
+        <div class="stat">💬 <span class="val comment-count">9</span></div>
+        <div class="stat">👁️ <span class="val">856</span></div>
+      </div>
+      <div class="actions">
+        <button class="action-btn like-btn" onclick="likeVideo(this)">❤️ Like</button>
+        <button class="action-btn" onclick="toggleComments(this)">💬 Comment</button>
+        <button class="action-btn scout-btn" onclick="openScout('Hassan Farah')">🌟 Scout</button>
+      </div>
+      <div class="comments-section">
+        <div class="comment-input-row">
+          <input class="comment-input" type="text" placeholder="Faallo geli...">
+          <button class="send-btn" onclick="sendComment(this)">➤</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- UPLOAD PAGE -->
+<div class="page" id="page-upload">
+  <div class="page-inner">
+    <div class="section-title">📤 Video Soo Geli</div>
+    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">🎥</div>
+      <div class="upload-text">Video dooro ama halkan ku taabo</div>
+      <input type="file" id="fileInput" accept="video/*" style="display:none" onchange="handleFile(this)">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Magacaaga</label>
+      <input class="form-input" type="text" placeholder="Tusaale: Ahmed Mohamed">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Magaalada</label>
+      <input class="form-input" type="text" placeholder="Tusaale: Muqdisho">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Da'da</label>
+      <input class="form-input" type="number" placeholder="Tusaale: 18" min="10" max="40">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Booska</label>
+      <select class="form-select">
+        <option value="">Boos dooro</option>
+        <option>ST — Striker</option>
+        <option>CAM — Attacking Mid</option>
+        <option>CM — Central Mid</option>
+        <option>CB — Centre Back</option>
+        <option>LB / RB — Full Back</option>
+        <option>GK — Goalkeeper</option>
+      </select>
+    </div>
+    <button class="submit-btn" onclick="submitVideo()">⚽ SOO GEL VIDEO</button>
+  </div>
+</div>
+
+<!-- PROFILE / INSTALL PAGE -->
+<div class="page" id="page-profile">
+  <div class="profile-header">
+    <div class="profile-avatar">👤</div>
+    <div class="profile-name">Ciyaaryahanka</div>
+    <div class="profile-sub">🇸🇴 Football Talent</div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-num">0</div>
+      <div class="stat-lbl">Videos</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">0</div>
+      <div class="stat-lbl">Likes</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">0</div>
+      <div class="stat-lbl">Scouts</div>
+    </div>
+  </div>
+
+  <div class="install-guide">
+    <div class="guide-title">📱 Sidee App-ka Loo Install Gareyaa?</div>
+
+    <div class="guide-step">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Android:</strong> Chrome browser-ka fur → menu (⋮) → <strong>"Add to Home screen"</strong> taabo</div>
+    </div>
+
+    <div class="guide-step">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>iPhone:</strong> Safari browser-ka fur → share (□↑) → <strong>"Add to Home Screen"</strong> taabo</div>
+    </div>
+
+    <div class="guide-step">
+      <div class="step-num">3</div>
+      <div class="step-text">Magaca <strong>"Football Talent"</strong> xaqiiji → <strong>Add</strong> taabo</div>
+    </div>
+
+    <div class="guide-step">
+      <div class="step-num">4</div>
+      <div class="step-text">✅ App-ka hadda <strong>home screen-kaaga</strong> ayuu ku jiraa!</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="showPage('feed', this)">
+    <span class="icon">🎬</span>
+    <span>Feed</span>
+  </button>
+  <button class="nav-item" onclick="showPage('upload', this)">
+    <span class="icon">📤</span>
+    <span>Upload</span>
+  </button>
+  <button class="nav-item" onclick="showPage('profile', this)">
+    <span class="icon">👤</span>
+    <span>Profile</span>
+  </button>
+</nav>
+
+<!-- Scout Modal -->
+<div class="modal-overlay" id="scoutModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🌟 Scout Request</div>
+    <div class="modal-sub" id="scoutName">Ciyaaryahanka</div>
+    <div class="form-group">
+      <label class="form-label">Magacaaga (Scout)</label>
+      <input class="form-input" type="text" placeholder="Magacaaga geli">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Kooxda / Club</label>
+      <input class="form-input" type="text" placeholder="Kooxda magac">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Lambarka Telefoonka</label>
+      <input class="form-input" type="tel" placeholder="+252 ...">
+    </div>
+    <button class="scout-form-btn" onclick="sendScout()">📨 DALBASHADA DIR</button>
+    <button class="modal-close" onclick="closeScout()">Xir</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // PWA Install
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBanner').classList.add('show');
+  });
+
+  document.getElementById('installBtn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById('installBanner').classList.remove('show');
+      if (outcome === 'accepted') showToast('✅ App-ka la install garey!');
+    }
+  });
+
+  // Navigation
+  function showPage(page, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function likeVideo(btn) {
+    const card = btn.closest('.video-card');
+    const count = card.querySelector('.like-count');
+    if (btn.classList.contains('liked')) {
+      btn.classList.remove('liked');
+      btn.textContent = '❤️ Like';
+      count.textContent = parseInt(count.textContent) - 1;
+    } else {
+      btn.classList.add('liked');
+      btn.textContent = '❤️ Liked';
+      count.textContent = parseInt(count.textContent) + 1;
+      showToast('❤️ Waxaad jecel tahay!');
+    }
+  }
+
+  function toggleComments(btn) {
+    const section = btn.closest('.video-card').querySelector('.comments-section');
+    section.classList.toggle('open');
+    btn.textContent = section.classList.contains('open') ? '💬 Xir' : '💬 Comment';
+  }
+
+  function sendComment(btn) {
+    const input = btn.previousElementSibling;
+    const text = input.value.trim();
+    if (!text) return;
+    const section = btn.closest('.comments-section');
+    const item = document.createElement('div');
+    item.className = 'comment-item';
+    item.innerHTML = `<div class="comment-avatar">A</div>
+      <div class="comment-body">
+        <div class="comment-user">Adiga</div>
+        <div class="comment-text">${text}</div>
+      </div>`;
+    section.insertBefore(item, btn.closest('.comment-input-row'));
+    const cc = btn.closest('.video-card').querySelector('.comment-count');
+    cc.textContent = parseInt(cc.textContent) + 1;
+    input.value = '';
+    showToast('💬 Faalladaada la diray!');
+  }
+
+  function playVideo(el) {
+    el.style.background = '#000';
+    el.innerHTML = `<div style="color:var(--muted);padding:60px 20px;text-align:center;font-size:0.85rem;letter-spacing:2px;">🎥 VIDEO HALKAN<br><small style="color:#2e5c2e">Sample.mp4 ku dar</small></div>`;
+    showToast('🎥 Video la bilaabay!');
+  }
+
+  function openScout(name) {
+    document.getElementById('scoutName').textContent = '👤 ' + name;
+    document.getElementById('scoutModal').classList.add('open');
+  }
+
+  function closeScout() {
+    document.getElementById('scoutModal').classList.remove('open');
+  }
+
+  function sendScout() {
+    closeScout();
+    showToast('🌟 Scout dalbashada la diray!');
+  }
+
+  function handleFile(input) {
+    if (input.files[0]) {
+      const box = input.closest('.upload-box');
+      box.innerHTML = `<div class="upload-icon">✅</div><div class="upload-text">${input.files[0].name}</div>`;
+    }
+  }
+
+  function submitVideo() {
+    showToast('✅ Video si guul leh loo soo galiyay!');
+    showPage('feed', document.querySelectorAll('.nav-item')[0]);
+  }
+
+  // Service Worker registration
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      const CACHE = 'ft-v1';
+      self.addEventListener('install', e => {
+        e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
+      });
+      self.addEventListener('fetch', e => {
+        e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+      });
+    `;
+    const blob = new Blob([swCode], {type: 'application/javascript'});
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  }
+</script>
+</body>
+</html>
